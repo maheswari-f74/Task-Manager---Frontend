@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background-color: #f9f9f9;
+  color: #222;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.sort-section,
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.sort-section h4,
+.filter-section h4 {
+  margin-bottom: 8px;
+}
+
+.sort-section p,
+.filter-section p {
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+.dark-mode-toggle {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Main Board */
+.board {
+  flex: 1;
+  padding: 20px;
+}
+
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.profile-placeholder {
+  width: 140px;
+  height: 14px;
+  background-color: #ddd;
+  border-radius: 7px;
+}
+
+.profile-placeholder.short {
+  width: 100px;
+}
+
+.add-task-btn {
+  padding: 10px 20px;
+  background-color: #347dff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Task Columns */
+.task-columns {
+  display: flex;
+  gap: 30px;
+}
+
+.task-column {
+  flex: 1;
+}
+
+.task-column h2 {
+  margin-bottom: 15px;
+}
+
+.task-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.task-card h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.task-card p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+/* Tag Colors */
+.low {
+  background-color: #f1f0e6;
+  color: #555;
+}
+
+.medium {
+  background-color: #f3e8d9;
+  color: #666;
+}
+
+.high {
+  background-color: #fce2e2;
+  color: #d00;
+}
+
+.in-progress {
+  background-color: #f8dcdc;
+  color: #a00;
+}
+
+.done {
+  background-color: #f4e4c9;
+  color: #444;
+}
+
+.delete-icon {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 16px;
+}

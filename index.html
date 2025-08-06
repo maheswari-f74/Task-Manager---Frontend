@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Board</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <input type="text" class="search" placeholder="🔍 Search" />
+      <div class="sort-section">
+        <h4>Sort by:</h4>
+        <p>Due Date</p>
+        <p>Priority</p>
+        <p>Status</p>
+      </div>
+      <div class="filter-section">
+        <h4>Filter:</h4>
+        <p>In Progress</p>
+        <p>High Priority</p>
+      </div>
+      <div class="dark-mode-toggle">
+        <label for="dark-mode">Dark Mode</label>
+        <input type="checkbox" id="dark-mode"/>
+      </div>
+    </aside>
+
+    <!-- Main Board -->
+    <main class="board">
+      <header class="board-header">
+        <div class="profile-placeholder"></div>
+        <div class="profile-placeholder short"></div>
+        <button class="add-task-btn">+ Add Task</button>
+      </header>
+
+      <div class="task-columns">
+        <!-- To Do -->
+        <section class="task-column">
+          <h2>To Do</h2>
+          <div class="task-card">
+            <h3>Test title</h3>
+            <p>Due 2023 30</p>
+            <span class="tag low">Low</span>
+            <span class="delete-icon">🗑</span>
+          </div>
+        </section>
+
+        <!-- In Progress -->
+        <section class="task-column">
+          <h2>In Progress</h2>
+          <div class="task-card">
+            <h3>Test title</h3>
+            <p>Due 2023-07-5</p>
+            <span class="tag in-progress">In Progress</span>
+            <span class="tag high">High</span>
+          </div>
+        </section>
+
+        <!-- Done -->
+        <section class="task-column">
+          <h2>Done</h2>
+          <div class="task-card">
+            <h3>Test title</h3>
+            <p>Due 2025-20</p>
+            <span class="tag done">Done</span>
+            <span class="tag medium">Medium</span>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
