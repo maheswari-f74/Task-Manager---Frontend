@@ -1,98 +1,140 @@
-const searchInput = document.querySelector('.search');
-const sortOptions = document.querySelectorAll('.sort-section p');
-const filterOptions = document.querySelectorAll('.filter-section p');
-const darkModeToggle = document.querySelector('#dark-mode');
-const addTaskBtn = document.querySelector('.add-task-btn');
-let taskCards = document.querySelectorAll('.task-card');
+const { useState } = React;
 
-// Search
-searchInput.addEventListener('input', () => {
-  const query = searchInput.value.toLowerCase();
-  document.querySelectorAll('.task-card').forEach(card => {
-    const title = card.querySelector('h3').textContent.toLowerCase();
-    card.style.display = title.includes(query) ? '' : 'none';
+function TaskManager() {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  const [tag, setTag] = useState("");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const addTask = () => {
+    if (!newTask.trim()) return;
+    setTasks([
+      ...tasks,
+      { text: newTask, done: false, tag, id: Date.now() }
+    ]);
+    setNewTask("");
+    setTag("");
+  };
+
+  const toggleTask = (id) => {
+    setTasks(tasks.map(t =>
+      t.id === id ? { ...t, done: !t.done } : t
+    ));
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter(t => t.id !== id));
+  };
+
+  const filteredTasks = tasks.filter(t => {
+    const matchesQuery =
+      t.text.toLowerCase().includes(query.toLowerCase()) ||
+      t.tag.toLowerCase().includes(query.toLowerCase());
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "done" && t.done) ||
+      (filter === "pending" && !t.done);
+    return matchesQuery && matchesFilter;
   });
-});
 
-// Sort
-sortOptions.forEach(option => {
-  option.addEventListener('click', () => {
-    const sortType = option.textContent.trim().toLowerCase();
-    document.querySelectorAll('.task-column').forEach(column => {
-      const tasks = Array.from(column.querySelectorAll('.task-card'));
-      tasks.sort((a, b) => {
-        if (sortType === 'due date') {
-          return new Date(a.querySelector('p').textContent.replace('Due', '').trim()) -
-                 new Date(b.querySelector('p').textContent.replace('Due', '').trim());
-        } else if (sortType === 'priority') {
-          const order = { low: 1, medium: 2, high: 3 };
-          return order[getPriority(a)] - order[getPriority(b)];
-        }
-        return 0;
-      });
-      tasks.forEach(task => column.appendChild(task));
-    });
-  });
-});
+  const progress = tasks.length
+    ? (tasks.filter(t => t.done).length / tasks.length) * 100
+    : 0;
 
-function getPriority(card) {
-  if (card.querySelector('.low')) return 'low';
-  if (card.querySelector('.medium')) return 'medium';
-  if (card.querySelector('.high')) return 'high';
-  return 'low';
+  return (
+    <div className="p-6 bg-white shadow-lg rounded-xl w-full">
+      <h1 className="text-2xl font-bold mb-4 text-center">Task Manager</h1>
+
+      {/* Add Task */}
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="New task"
+          className="border p-2 flex-1 rounded"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Tag"
+          className="border p-2 w-28 rounded"
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+        />
+        <button
+          onClick={addTask}
+          className="bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
+        >
+          Add
+        </button>
+      </div>
+
+      {/* Search + Filter */}
+      <div className="flex gap-2 mb-4">
+        <input
+          id="searchBox"
+          type="text"
+          placeholder="Search tasks or tags..."
+          className="border p-2 flex-1 rounded"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <select
+          className="border p-2 rounded"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="all">All</option>
+          <option value="done">Done</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="mb-4">
+        <div className="w-full bg-gray-200 h-3 rounded">
+          <div
+            className="bg-green-500 h-3 rounded"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <p className="text-sm text-gray-600 mt-1">
+          Progress: {progress.toFixed(0)}%
+        </p>
+      </div>
+
+      {/* Task List */}
+      <ul className="space-y-2">
+        {filteredTasks.map(t => (
+          <li
+            key={t.id}
+            className="flex justify-between items-center p-2 border rounded"
+          >
+            <div
+              className={`flex-1 cursor-pointer ${
+                t.done ? "line-through text-gray-500" : ""
+              }`}
+              onClick={() => toggleTask(t.id)}
+            >
+              {t.text}
+              {t.tag && (
+                <span className="ml-2 text-xs bg-gray-200 px-2 py-0.5 rounded">
+                  #{t.tag}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => deleteTask(t.id)}
+              className="text-red-500 hover:text-red-700"
+            >
+              ✕
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-// Filter
-filterOptions.forEach(option => {
-  option.addEventListener('click', () => {
-    const type = option.textContent.trim().toLowerCase();
-    document.querySelectorAll('.task-card').forEach(card => {
-      if (type === 'in progress') {
-        card.style.display = card.querySelector('.in-progress') ? '' : 'none';
-      } else if (type === 'high priority') {
-        card.style.display = card.querySelector('.high') ? '' : 'none';
-      }
-    });
-  });
-});
-
-// Dark Mode
-darkModeToggle.addEventListener('change', () => {
-  document.body.classList.toggle('dark-mode', darkModeToggle.checked);
-});
-
-// Add Task
-addTaskBtn.addEventListener('click', () => {
-  const title = prompt("Enter task title:");
-  const dueDate = prompt("Enter due date (YYYY-MM-DD):");
-  const priority = prompt("Enter priority (low, medium, high):").toLowerCase();
-  const status = prompt("Enter status (To Do, In Progress, Done):");
-
-  if (title && dueDate && priority && status) {
-    const column = document.querySelector(`.task-column[data-status="${status}"]`);
-    if (column) {
-      const card = document.createElement('div');
-      card.classList.add('task-card');
-      card.innerHTML = `
-        <h3>${title}</h3>
-        <p>Due ${dueDate}</p>
-        ${status.toLowerCase() === 'in progress' ? '<span class="tag in-progress">In Progress</span>' : ''}
-        <span class="tag ${priority}">${priority.charAt(0).toUpperCase() + priority.slice(1)}</span>
-        <span class="delete-icon">🗑️</span>
-      `;
-      column.appendChild(card);
-      attachDeleteEvent(card);
-    }
-  }
-});
-
-// Delete task
-function attachDeleteEvent(card) {
-  const delBtn = card.querySelector('.delete-icon');
-  if (delBtn) {
-    delBtn.addEventListener('click', () => {
-      card.remove();
-    });
-  }
-}
-document.querySelectorAll('.task-card').forEach(attachDeleteEvent);
+ReactDOM.createRoot(document.getElementById("root")).render(<TaskManager />);
